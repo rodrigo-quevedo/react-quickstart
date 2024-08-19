@@ -2,10 +2,17 @@ import {useState} from 'react';
 
 export default function Board() {
     const [squares, setSquares] = useState(Array(9).fill(null))
+    const [xIsNext, setXIsNext] = useState(true)
 
     function handleClick(i) {
+        if (squares[i] || calculateWinner(squares)) return
+
         let nextSquares = [...squares]
-        nextSquares[i] = "X"
+
+        if (xIsNext) nextSquares[i] = "X"
+        else nextSquares[i] = "O"
+
+        setXIsNext(!xIsNext)
         setSquares(nextSquares)
     }
 
@@ -34,3 +41,41 @@ function Square({value, onClickProp}) {
     )
 }
 
+function calculateWinner(squares) {
+    let winningLines = [
+        [0,1,2], 
+        [3,4,5], 
+        [6,7,8],
+        
+        [0,
+         3,
+         6],
+        
+        [1,
+         4,
+         7],
+
+        [2,
+         5,
+         8],
+
+        [0,
+           4,
+             8],
+
+        [   2,
+          4,
+        6]
+    ]
+
+    for (let i = 0; i < winningLines.length ; i++) {
+        // desestructuración equivalente a: [ winningLines[0], winningLines[1], winningLines[2] ]
+        let [a,b,c] = winningLines[i]
+
+        if (squares[a] === 'X' && squares[a] === squares[b] && squares[a] === squares[c]) return squares[a]
+        
+        if (squares[a] === 'O' && squares[a] === squares[b] && squares[a] === squares[c]) return squares[a]
+    }
+    return null
+
+}
