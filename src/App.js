@@ -1,8 +1,30 @@
 import {useState} from 'react';
 
-export default function Board() {
-    const [squares, setSquares] = useState(Array(9).fill(null))
+export default function Game() {
+    const [history, setHistory] = useState([Array(9).fill(null)])
     const [xIsNext, setXIsNext] = useState(true)
+    const squares = history[history.length - 1]
+
+    function handlePlay(nextSquares) {
+        let nextHistory = [...history, nextSquares]
+        setHistory(nextHistory)
+        setXIsNext(!xIsNext)
+        console.log(history)
+    }
+
+    return (
+        <div className="game">
+            <Board squares={squares} xIsNext={xIsNext} onPlay={handlePlay}/>
+            <div className="game-info">
+                <ol>
+
+                </ol>
+            </div>
+        </div>
+    )
+}
+
+function Board({squares, xIsNext, onPlay}) {
 
     function handleClick(i) {
         if (squares[i] || calculateWinner(squares)) return
@@ -12,8 +34,7 @@ export default function Board() {
         if (xIsNext) nextSquares[i] = "X"
         else nextSquares[i] = "O"
 
-        setXIsNext(!xIsNext)
-        setSquares(nextSquares)
+        onPlay(nextSquares)
     }
 
     let text;
@@ -25,7 +46,7 @@ export default function Board() {
     }
 
     return (
-        <>
+        <div>
             <div className="status">{text}</div>
             <div className="boardContainer">
                 <Square value={squares[0]} onClickProp={()=> {handleClick(0)}}/>
@@ -40,8 +61,8 @@ export default function Board() {
                 <Square value={squares[7]} onClickProp={()=> {handleClick(7)}}/>
                 <Square value={squares[8]} onClickProp={()=> {handleClick(8)}}/>
             </div>
-    </>
-)   
+        </div>
+    )   
 }
 
 function Square({value, onClickProp}) {
