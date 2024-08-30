@@ -1,71 +1,54 @@
 import {useState} from 'react';
 
+import Board from './Board'
+
 export default function Game() {
     const [history, setHistory] = useState([Array(9).fill(null)])
-    const [xIsNext, setXIsNext] = useState(true)
-    const squares = history[history.length - 1]
+    const [currentTurn, setCurrentTurn] = useState(0)
+
+    // const [xIsNext, setXIsNext] = useState(true)
+    const xIsNext = currentTurn % 2 === 0 ? true : false;
+    
+    // const squares = history[history.length - 1]
+    const squares = history[currentTurn]
+
 
     function handlePlay(nextSquares) {
-        let nextHistory = [...history, nextSquares]
+        let nextHistory = [...history.slice(0, currentTurn + 1), nextSquares]
         setHistory(nextHistory)
-        setXIsNext(!xIsNext)
+        // setXIsNext(!xIsNext)
         console.log(history)
+
+        setCurrentTurn(currentTurn + 1)
     }
+
+    const moves = history.map((element, index)=>{
+        if (index > currentTurn) return;
+        return (
+            <li key={index}>
+                <button onClick={()=> {setCurrentTurn(index)}}>
+                    {`Go to move ${index}`}
+                </button>
+            </li>
+        )
+    })
 
     return (
         <div className="game">
             <Board squares={squares} xIsNext={xIsNext} onPlay={handlePlay}/>
             <div className="game-info">
-                <ol>
-
+                <ol className="movesList">
+                    <div className="movesText">History of moves</div>
+                    {moves}
                 </ol>
             </div>
         </div>
     )
 }
 
-function Board({squares, xIsNext, onPlay}) {
 
-    function handleClick(i) {
-        if (squares[i] || calculateWinner(squares)) return
 
-        let nextSquares = [...squares]
-
-        if (xIsNext) nextSquares[i] = "X"
-        else nextSquares[i] = "O"
-
-        onPlay(nextSquares)
-    }
-
-    let text;
-    if (calculateWinner(squares)){
-        text = `Winner is ${calculateWinner(squares)}`
-    }
-    else {
-        text = `Next player is: ${xIsNext ? 'X' : 'O'}`
-    }
-
-    return (
-        <div>
-            <div className="status">{text}</div>
-            <div className="boardContainer">
-                <Square value={squares[0]} onClickProp={()=> {handleClick(0)}}/>
-                <Square value={squares[1]} onClickProp={()=> {handleClick(1)}}/>
-                <Square value={squares[2]} onClickProp={()=> {handleClick(2)}}/>
-            
-                <Square value={squares[3]} onClickProp={()=> {handleClick(3)}}/>
-                <Square value={squares[4]} onClickProp={()=> {handleClick(4)}}/>
-                <Square value={squares[5]} onClickProp={()=> {handleClick(5)}}/>
-            
-                <Square value={squares[6]} onClickProp={()=> {handleClick(6)}}/>
-                <Square value={squares[7]} onClickProp={()=> {handleClick(7)}}/>
-                <Square value={squares[8]} onClickProp={()=> {handleClick(8)}}/>
-            </div>
-        </div>
-    )   
-}
-
-function Square({value, onClickProp}) {
+export function Square({value, onClickProp}) {
     return (
         <button className="square" onClick={onClickProp}>
             {value}
@@ -73,7 +56,7 @@ function Square({value, onClickProp}) {
     )
 }
 
-function calculateWinner(squares) {
+export function calculateWinner(squares) {
     let winningLines = [
         [0,1,2], 
         [3,4,5], 

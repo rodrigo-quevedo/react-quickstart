@@ -46,3 +46,22 @@ body {
     width: calc(100% / 3);
     height: calc(100% / 3)
 }
+
+.movesText {
+    margin-bottom: 15px;
+    text-decoration: underline;
+}
+
+.movesList {
+    margin: 0;
+    list-style-type: none;
+    text-align: center;
+}
+
+.movesList > li {
+    margin: 10px 0;
+}
+
+.movesList > li > button {
+    padding: 5px;
+}
