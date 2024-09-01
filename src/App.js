@@ -2,6 +2,15 @@ import {useState} from 'react';
 
 import Board from './Board'
 
+//Add a toggle button that lets you sort the moves in either ascending or descending order.
+function MoveOrderButton({ascending, setAscending}) {
+    return (
+        <button className="toggleAscendingButton" onClick={() => {setAscending(!ascending)} }>
+            {ascending ? `Set to DESCENDING order` : `Set to ASCENDING order`}
+        </button>
+    )
+}
+
 export default function Game() {
     const [history, setHistory] = useState([Array(9).fill(null)])
     const [currentTurn, setCurrentTurn] = useState(0)
@@ -12,6 +21,8 @@ export default function Game() {
     // const squares = history[history.length - 1]
     const squares = history[currentTurn]
 
+
+    const [ascending, setAscending] = useState(false)
 
     function handlePlay(nextSquares) {
         let nextHistory = [...history.slice(0, currentTurn + 1), nextSquares]
@@ -25,6 +36,12 @@ export default function Game() {
     const moves = history.map((element, index)=>{
         if (index > currentTurn) return;
         return (
+            //For the current move only, show “You are at move #…” instead of a button.
+            index === currentTurn ? 
+            <li key={index}>
+                {`You are at move #${index}`}
+            </li>
+            :
             <li key={index}>
                 <button onClick={()=> {setCurrentTurn(index)}}>
                     {`Go to move ${index}`}
@@ -37,10 +54,16 @@ export default function Game() {
         <div className="game">
             <Board squares={squares} xIsNext={xIsNext} onPlay={handlePlay}/>
             <div className="game-info">
-                <ol className="movesList">
-                    <div className="movesText">History of moves</div>
-                    {moves}
-                </ol>
+                <div>
+                    <ol className="movesList">        
+                        <div className="movesText">History of moves</div>
+                        {ascending ? moves.reverse() : moves}
+                    </ol>   
+                </div>
+                <MoveOrderButton
+                ascending={ascending}
+                setAscending={setAscending}
+                />
             </div>
         </div>
     )
