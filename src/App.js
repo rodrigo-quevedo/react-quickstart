@@ -28,7 +28,7 @@ export default function Game() {
         let nextHistory = [...history.slice(0, currentTurn + 1), nextSquares]
         setHistory(nextHistory)
         // setXIsNext(!xIsNext)
-        console.log(history)
+        // console.log(history)
 
         setCurrentTurn(currentTurn + 1)
     }
