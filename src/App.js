@@ -33,6 +33,30 @@ export default function Game() {
         setCurrentTurn(currentTurn + 1)
     }
 
+    //Display the location for each move in the format (row, col) in the move history list.
+    const calculatePositions = (position) => {
+        let x, y;
+        
+        y = position % 3 // 0 mod 3 = 0; 1 mod 3 = 1; 2 mod 3 = 2; 3 mod 3 = 0; etc.
+
+        if (position <= 2) x = 0
+        else if (position <= 5) x = 1
+        else x = 2
+
+        return {x, y}
+    }
+
+    const calculateLastMove = (turn) => {
+        let previousTurn = history[turn-1]; //0 is never passed as 'turn'
+        let currentTurn = history[turn]
+
+        for (let turn in previousTurn) {
+            if (previousTurn[turn] !== currentTurn[turn]){
+                return turn;
+            }
+        }
+    }
+
     const moves = history.map((element, index)=>{
         if (index > currentTurn) return;
         return (
@@ -44,7 +68,9 @@ export default function Game() {
             :
             <li key={index}>
                 <button onClick={()=> {setCurrentTurn(index)}}>
-                    {`Go to move ${index}`}
+                    {(index === 0) ? `Start new game`
+                    :
+                    `Go to move ${index} (row:${calculatePositions(calculateLastMove(index)).x},col:${calculatePositions(calculateLastMove(index)).y})`}
                 </button>
             </li>
         )
