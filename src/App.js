@@ -71,9 +71,9 @@ export default function Game() {
 
 
 
-export function Square({value, onClickProp}) {
+export function Square({value, onClickProp, highlight}) {
     return (
-        <button className="square" onClick={onClickProp}>
+        <button className={highlight? "square highlight": "square"} onClick={onClickProp}>
             {value}
         </button>
     )
@@ -110,9 +110,15 @@ export function calculateWinner(squares) {
         // desestructuración equivalente a: [ winningLines[0], winningLines[1], winningLines[2] ]
         let [a,b,c] = winningLines[i]
 
-        if (squares[a] === 'X' && squares[a] === squares[b] && squares[a] === squares[c]) return squares[a]
+        if (squares[a] === 'X' && squares[a] === squares[b] && squares[a] === squares[c]) return {
+            winner: squares[a],
+            positions: [a,b,c]        
+        }
         
-        if (squares[a] === 'O' && squares[a] === squares[b] && squares[a] === squares[c]) return squares[a]
+        if (squares[a] === 'O' && squares[a] === squares[b] && squares[a] === squares[c]) return {
+            winner: squares[a],
+            positions: [a,b,c]        
+        }
     }
     return null
 

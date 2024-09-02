@@ -4,7 +4,7 @@ import {Square, calculateWinner} from './App'
 export default function Board({squares, xIsNext, onPlay}) {
 
     function handleClick(i) {
-        if (squares[i] || calculateWinner(squares)) return
+        if (squares[i] || calculateWinner(squares)?.winner) return
 
         let nextSquares = [...squares]
 
@@ -15,8 +15,8 @@ export default function Board({squares, xIsNext, onPlay}) {
     }
 
     let text;
-    if (calculateWinner(squares)){
-        text = `Winner is ${calculateWinner(squares)}`
+    if (calculateWinner(squares)?.winner){
+        text = `Winner is ${calculateWinner(squares)?.winner}`
     }
     else {
         text = `Next player is: ${xIsNext ? 'X' : 'O'}`
